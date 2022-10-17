@@ -1,0 +1,106 @@
+<html>
+<head>
+	<meta name="theme-color" content="#1a5d8d">
+	<title>Species Cite</title>
+	
+	<style>
+		body {
+			font-family:Arial, sans-serif;
+			padding:3em;
+		}
+		input {
+			font-size:2em;
+		}
+		button {
+			font-size:2em;
+		}
+		div {
+			padding:0.5em;
+		}
+		p {
+			color: rgb(64,64,64);
+			line-height:1.5em;
+		}
+	
+	</style>
+	
+							
+	<script type="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
+	
+	
+</head>
+<body>
+	<h1>Species Cite</h1>
+	
+	<p>Enter a species name and get a citation for the corresponding publication. 
+	Data comes from <a href="https://www.checklistbank.org" target="_new">ChecklistBank</a>. 
+	Results are only returned if the species name exists in ChecklistBank together with
+	a bibliographic reference that has a persistent identifier (PID) such as a DOI. 
+	</p>
+
+	<input id="q" name="q" value="Mitrula brevispora">
+	<button onclick="go()">Go</button>
+	
+	<div id="output" style="display:none;"></div>
+	
+	<script>
+	
+		function go() {
+			var output =  document.getElementById("output");
+			output.style.display = "none";
+
+			var q = document.getElementById("q").value;
+	
+			var url = 'api.php?q=' + encodeURIComponent(q);
+			
+			fetch(url)
+				.then(
+					function(response){
+						if (response.status != 200) {
+							console.log('Looks like there was a problem. Status Code: ' + response.status);
+        					return;
+						}
+				
+						response.json().then(function(data) {
+							var html = '';
+							
+							// default
+							html += '<div>Sorry, couldn\'t find a citation and PID for this name.</div>';
+						
+							for (var i in data.results) {
+								html = '';
+								html += '<div>';
+								html += '<h2>' + data.results[i].name + '</h2>';
+								if (data.results[i].reference)
+								{
+									if (data.results[i].reference.citation) {
+										html += '<div>' + data.results[i].reference.citation + '</div>';
+									}
+
+									if (data.results[i].reference.csl.DOI) {
+										html += '<div><a href="https://doi.org/' + data.results[i].reference.csl.DOI + '" target="_new">https://doi.org/' + data.results[i].reference.csl.DOI + '</a></div>';
+																	
+										html += '<div data-badge-details="right" data-badge-type="medium-donut" data-doi="' 
+											+ data.results[i].reference.csl.DOI + '" data-hide-no-mentions="true" class="altmetric-embed"></div>';
+									}
+								}
+								
+								html += '</div>';
+							}
+							
+							output.innerHTML = html;
+							output.style.display = "block";
+							
+							_altmetric_embed_init();
+						
+						});
+					}
+					);
+					
+		}	
+		
+	
+	</script>
+
+</body>
+</html>
