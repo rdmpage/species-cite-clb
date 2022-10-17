@@ -27,6 +27,7 @@
 							
 	<script type="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
 	
+
 	
 </head>
 <body>
@@ -39,17 +40,19 @@
 	</p>
 
 	<input id="q" name="q" value="Mitrula brevispora">
-	<button onclick="go()">Go</button>
+	<button id="go" onclick="go()">Go</button>
 	
 	<div id="output" style="display:none;"></div>
 	
 	<script>
 	
 		function go() {
-			var output =  document.getElementById("output");
+			var output = document.getElementById("output");
 			output.style.display = "none";
 
 			var q = document.getElementById("q").value;
+			q = q.replace(/\s+$/, '');
+			q = q.replace(/^\s+/, '');
 	
 			var url = 'api.php?q=' + encodeURIComponent(q);
 			
@@ -101,6 +104,21 @@
 		
 	
 	</script>
+	
+    <script>
+    	const input = document.getElementById("q");
+
+		input.addEventListener('keypress', keypress);
+		
+		function keypress(e) {
+ 			var keycode = (event.keyCode ? event.keyCode : event.which);
+			if(keycode == '13'){
+				document.getElementById("go").click();   
+			}
+		}
+  
+	
+	 </script>	
 
 </body>
 </html>
