@@ -36,7 +36,7 @@
 	<p>Enter a species name and get a citation for the corresponding publication. 
 	Data comes from <a href="https://www.checklistbank.org" target="_new">ChecklistBank</a>. 
 	Results are only returned if the species name exists in ChecklistBank together with
-	a bibliographic reference that has a persistent identifier (PID) such as a DOI. 
+	a bibliographic reference, ideally one that has a persistent identifier (PID) such as a DOI. 
 	</p>
 
 	<input id="q" name="q" value="Mitrula brevispora">
@@ -79,6 +79,11 @@
 									if (data.results[i].reference.citation) {
 										html += '<div>' + data.results[i].reference.citation + '</div>';
 									}
+									
+									if (data.results[i].reference.csl.WIKIDATA) {
+										html += '<div>Wikidata <a href="https://www.wikidata.org/wiki/' + data.results[i].reference.csl.WIKIDATA  + '" target="_new">' + data.results[i].reference.csl.WIKIDATA  + '</a></div>';
+									}
+									
 
 									if (data.results[i].reference.csl.DOI) {
 										html += '<div><a href="https://doi.org/' + data.results[i].reference.csl.DOI + '" target="_new">https://doi.org/' + data.results[i].reference.csl.DOI + '</a></div>';

@@ -102,14 +102,20 @@ if ($response && !$response->empty)
 			{
 				$hit->reference = new stdclass;
 				
-				$have_doi = false;
+				$ok = false;
 				
 				if (isset($reference_response->csl))
 				{
 					$hit->reference->csl = $reference_response->csl;
-
-					$have_doi = isset($hit->reference->csl->DOI);
-
+					
+					$ok = isset($hit->reference->csl->DOI);
+					
+					if (preg_match('/^Q\d+$/', $result->usage->name->publishedInId))
+					{
+						$hit->reference->csl->WIKIDATA = $result->usage->name->publishedInId;
+						$ok = true;
+					}
+					
 				}
 
 				if (isset($reference_response->citation))
@@ -118,7 +124,9 @@ if ($response && !$response->empty)
 				}
 				
 				
-				if ($have_doi)
+				
+				
+				if ($ok)
 				{
 					$doc->results[] = $hit;
 				}
