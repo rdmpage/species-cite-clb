@@ -39,7 +39,9 @@ $datasets = array(
 	//2073,
 	129659, // Index Fungorum with Literature
 	164203, // IPNI with literature
-	);
+	127379, // AFD
+	128415, // BioNames
+	);	
 
 // name to search for
 $q = "Mitrula brevispora";
@@ -63,6 +65,9 @@ foreach ($datasets as $datasetKey)
 
 // add name
 $parameters[] = "q=" . urlencode($q);
+
+$parameters[] = "content=SCIENTIFIC_NAME";
+$parameters[] = "type=EXACT";
 
 $url = 'https://api.checklistbank.org/nameusage/search';
 $url .= '?' . join('&', $parameters);
@@ -97,9 +102,14 @@ if ($response && !$response->empty)
 			{
 				$hit->reference = new stdclass;
 				
+				$have_doi = false;
+				
 				if (isset($reference_response->csl))
 				{
 					$hit->reference->csl = $reference_response->csl;
+
+					$have_doi = isset($hit->reference->csl->DOI);
+
 				}
 
 				if (isset($reference_response->citation))
@@ -107,7 +117,11 @@ if ($response && !$response->empty)
 					$hit->reference->citation = $reference_response->citation;
 				}
 				
-				$doc->results[] = $hit;
+				
+				if ($have_doi)
+				{
+					$doc->results[] = $hit;
+				}
 			}
 		}
 	

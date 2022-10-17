@@ -64,11 +64,11 @@
 						response.json().then(function(data) {
 							var html = '';
 							
-							// default
-							html += '<div>Sorry, couldn\'t find a citation and PID for this name.</div>';
-						
+							if (data.results.length == 0) {
+								html += '<div>Sorry, couldn\'t find a citation and PID for this name.</div>';
+							}
+													
 							for (var i in data.results) {
-								html = '';
 								html += '<div>';
 								html += '<h2>' + data.results[i].name + '</h2>';
 								if (data.results[i].reference)
