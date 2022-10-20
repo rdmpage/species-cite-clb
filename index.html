@@ -21,6 +21,11 @@
 			color: rgb(64,64,64);
 			line-height:1.5em;
 		}
+		
+		.pdf {
+			width: 100%;
+			height:auto;
+		}
 	
 	</style>
 	
@@ -39,16 +44,22 @@
 	a bibliographic reference, ideally one that has a persistent identifier (PID) such as a DOI. 
 	</p>
 
-	<input id="q" name="q" value="Mitrula brevispora">
+	<!-- Manulea decipiens -->
+	<!-- Mitrula brevispora -->
+	<!-- Costus asteranthus -->
+	<input id="q" name="q" value="Costus asteranthus">
 	<button id="go" onclick="go()">Go</button>
 	
 	<div id="output" style="display:none;"></div>
+	<div id="pdf" style="display:none;"></div>
 	
 	<script>
 	
 		function go() {
 			var output = document.getElementById("output");
 			output.style.display = "none";
+
+			document.getElementById("pdf").style.display = "none";
 
 			var q = document.getElementById("q").value;
 			q = q.replace(/\s+$/, '');
@@ -67,6 +78,8 @@
 						response.json().then(function(data) {
 							var html = '';
 							
+							var wikidata = '';
+							
 							if (data.results.length == 0) {
 								html += '<div>Sorry, couldn\'t find a citation and PID for this name.</div>';
 							}
@@ -81,6 +94,8 @@
 									}
 									
 									if (data.results[i].reference.csl.WIKIDATA) {
+
+										wikidata = data.results[i].reference.csl.WIKIDATA;
 										html += '<div>Wikidata <a href="https://www.wikidata.org/wiki/' + data.results[i].reference.csl.WIKIDATA  + '" target="_new">' + data.results[i].reference.csl.WIKIDATA  + '</a></div>';
 									}
 									
@@ -100,12 +115,60 @@
 							output.style.display = "block";
 							
 							_altmetric_embed_init();
+							
+							if (wikidata != '') {
+								show_pdf(wikidata);
+							}
 						
 						});
 					}
 					);
 					
 		}	
+		
+		function show_pdf(wikidata) {
+			var output = document.getElementById("pdf");
+			output.style.display = "none";
+	
+			var url = 'wikidata.php?id=' + wikidata;
+			
+			fetch(url)
+				.then(
+					function(response){
+						if (response.status != 200) {
+							console.log('Looks like there was a problem. Status Code: ' + response.status);
+        					return;
+						}
+				
+						response.json().then(function(data) {
+							if (data.link) {
+							
+								var pdf_url = data.link.URL;
+							
+								var page = 1;
+								var page_to_display = page || 1;
+			
+								var pdfjs_url 	= 'pdfjs/web/viewer.html?file=';
+			
+								var proxy_url 	= '../../pdfproxy.php?url=';
+								
+								var html = '<p><a href="' + pdf_url + '" target="_new">PDF link</a> via Wikidata.</p>'
+									+ '<iframe id="pdf" width="100%" height="500" frameBorder="0" src="' 
+									+ pdfjs_url
+									+ encodeURIComponent(proxy_url + encodeURIComponent(pdf_url))				
+				 					+ '#page=' + page_to_display + '"/>';
+				 
+								output.innerHTML = html;
+								output.style.display = "block";
+							
+							}
+						
+						});
+					}
+					);
+					
+		}	
+		
 		
 	
 	</script>
