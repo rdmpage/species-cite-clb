@@ -41,6 +41,7 @@ $datasets = array(
 	164203, // IPNI with literature
 	127379, // AFD
 	128415, // BioNames
+	223917, // ReptileDB with literature
 	);	
 
 // name to search for
