@@ -13,9 +13,19 @@
 		}
 		button {
 			font-size:2em;
+			background-color: #1a5d8d;
+			color: white;
+			border-radius: 4px;
+			border-style: none;
 		}
-		div {
-			padding:0.5em;
+		
+		.citation {
+			padding:1em;
+			line-height:1.5em;
+			border:1px solid #1a5d8d;
+			border-radius:4px;
+			color: rgb(64,64,64);
+			
 		}
 		p {
 			color: rgb(64,64,64);
@@ -26,14 +36,38 @@
 			width: 100%;
 			height:auto;
 		}
+		
+		table {
+			padding-top:1em;
+		}
+		td {
+			padding:0.5em;
+		}
 	
 	</style>
 	
 							
 	<script type="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
 	
+	<!--
+	<script>
+		function copyToClipboard() {
+		  // Get the text field
+		  var copyText = document.getElementById("citation");
 
-	
+		  // Select the text field
+		  copyText.select(); 
+		  copyText.setSelectionRange(0, 99999); // For mobile devices
+
+		   // Copy the text inside the text field
+		  navigator.clipboard.writeText(copyText.value);
+
+		  // Alert the copied text
+		  alert("Copied the text: " + copyText.value);
+		}	
+	</script>
+	-->
+
 </head>
 <body>
 	<h1>Species Cite</h1>
@@ -83,6 +117,9 @@
 							if (data.results.length == 0) {
 								html += '<div>Sorry, couldn\'t find a citation and PID for this name.</div>';
 							}
+							
+							var wikidata = '';
+							var doi = '';
 													
 							for (var i in data.results) {
 								html += '<div>';
@@ -90,22 +127,29 @@
 								if (data.results[i].reference)
 								{
 									if (data.results[i].reference.citation) {
-										html += '<div>' + data.results[i].reference.citation + '</div>';
+										html += '<div id="citation" class="citation">' + data.results[i].reference.citation + '</div>';
 									}
+									
+									html += '<table>';
 									
 									if (data.results[i].reference.csl.WIKIDATA) {
 
 										wikidata = data.results[i].reference.csl.WIKIDATA;
-										html += '<div>Wikidata <a href="https://www.wikidata.org/wiki/' + data.results[i].reference.csl.WIKIDATA  + '" target="_new">' + data.results[i].reference.csl.WIKIDATA  + '</a></div>';
+										html += '<tr><td>Wikidata</td><td><a href="https://www.wikidata.org/wiki/' + data.results[i].reference.csl.WIKIDATA  + '" target="_new">' + data.results[i].reference.csl.WIKIDATA  + '</a></td></tr>';
 									}
 									
-
 									if (data.results[i].reference.csl.DOI) {
-										html += '<div><a href="https://doi.org/' + data.results[i].reference.csl.DOI + '" target="_new">https://doi.org/' + data.results[i].reference.csl.DOI + '</a></div>';
-																	
-										html += '<div data-badge-details="right" data-badge-type="medium-donut" data-doi="' 
+										html += '<tr><td>DOI</td><td><a href="https://doi.org/' + data.results[i].reference.csl.DOI + '" target="_new">' + data.results[i].reference.csl.DOI + '</a></td></tr>';
+									}
+									
+									html += '<table>';
+									
+									if (data.results[i].reference.csl.DOI) {
+										doi = data.results[i].reference.csl.DOI;
+										html += '<div style="padding:1em;" data-badge-details="right" data-badge-type="medium-donut" data-doi="' 
 											+ data.results[i].reference.csl.DOI + '" data-hide-no-mentions="true" class="altmetric-embed"></div>';
 									}
+									
 								}
 								
 								html += '</div>';
@@ -116,9 +160,28 @@
 							
 							_altmetric_embed_init();
 							
-							if (wikidata != '') {
-								show_pdf(wikidata);
+							
+							if (wikidata != '' || doi != '') {
+								var url = 'findpdf.php?wikidata=' + wikidata + '&doi=' + encodeURIComponent(doi);
+			
+								fetch(url)
+									.then(
+										function(response){
+											if (response.status != 200) {
+												console.log('Looks like there was a problem. Status Code: ' + response.status);
+												return;
+											}
+				
+											response.json().then(function(data) {
+												if (data.length > 0) {
+													display_pdf(data[0]);
+												}
+						
+											});
+										}
+										);
 							}
+								
 						
 						});
 					}
@@ -126,58 +189,27 @@
 					
 		}	
 		
-		function show_pdf(wikidata) {
+
+		
+		function display_pdf(pdf_url) {		
+			var page = 1;
+			var page_to_display = page || 1;
+
+			var pdfjs_url 	= 'pdfjs/web/viewer.html?file=';
+
+			var proxy_url 	= '../../pdfproxy.php?url=';
+		
+			var html = '<p><a href="' + pdf_url + '" target="_new">PDF</a></p>'
+				+ '<iframe id="pdf" width="100%" height="500" frameBorder="0" src="' 
+				+ pdfjs_url
+				+ encodeURIComponent(proxy_url + encodeURIComponent(pdf_url))				
+				+ '#page=' + page_to_display + '"/>';
+
 			var output = document.getElementById("pdf");
 			output.style.display = "none";
-	
-			var url = 'wikidata.php?id=' + wikidata;
-			
-			fetch(url)
-				.then(
-					function(response){
-						if (response.status != 200) {
-							console.log('Looks like there was a problem. Status Code: ' + response.status);
-        					return;
-						}
-				
-						response.json().then(function(data) {
-							if (data.link) {
-							
-								var pdf_url = '';
-								
-								if (data.link) {
-									for (var i in data.link) {
-										if (data.link[i]['content-type'] == 'application/pdf') {
-											pdf_url = data.link[i].URL;
-										}
-									}
-								}
-								
-								if (pdf_url != '') {
-									var page = 1;
-									var page_to_display = page || 1;
-			
-									var pdfjs_url 	= 'pdfjs/web/viewer.html?file=';
-			
-									var proxy_url 	= '../../pdfproxy.php?url=';
-								
-									var html = '<p><a href="' + pdf_url + '" target="_new">PDF link</a> via Wikidata.</p>'
-										+ '<iframe id="pdf" width="100%" height="500" frameBorder="0" src="' 
-										+ pdfjs_url
-										+ encodeURIComponent(proxy_url + encodeURIComponent(pdf_url))				
-										+ '#page=' + page_to_display + '"/>';
-				 
-									output.innerHTML = html;
-									output.style.display = "block";
-								}
-							}
-						
-						});
-					}
-					);
-					
-		}	
-		
+			output.innerHTML = html;
+			output.style.display = "block";
+		}
 		
 	
 	</script>
