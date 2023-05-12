@@ -1,5 +1,7 @@
 <?php
 
+error_reporting(E_ALL);
+
 //----------------------------------------------------------------------------------------
 function get($url, $content_type = '')
 {	
@@ -211,7 +213,7 @@ if ($doi != '' && count($pdf_urls) == 0)
 		{
 			if (isset($obj->best_oa_location))
 			{
-				if isset($obj->best_oa_location->url_for_pdf)
+				if (isset($obj->best_oa_location->url_for_pdf))
 				{
 					$pdf_urls[] = $obj->best_oa_location->url_for_pdf;
 				}
