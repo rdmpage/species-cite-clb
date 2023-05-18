@@ -7,6 +7,7 @@
 		<string>3FB927E1-D5F6-468F-8D2C-F999D4B59B97</string>
 		<string>895A8D1D-CA76-404F-B680-1E6BAA9EEBE4</string>
 		<string>6C3B2E8F-5DBD-4DF1-B37B-F8C826BD6D8F</string>
+		<string>B7949597-EA38-48BF-A423-59B4484E598F</string>
 		<string>AB94D419-3528-4661-8412-A75FA1542DEE</string>
 		<string>5A7F1BDA-BC94-40DF-A99C-14A7D048B2A4</string>
 		<string>DFBC12D1-CE80-4AD3-85E6-190A71482195</string>
@@ -297,6 +298,54 @@
 			</dict>
 			<key>ItemName</key>
 			<string>findpdf.php</string>
+			<key>ItemType</key>
+			<string>FileReference</string>
+			<key>UserOverrideItemName</key>
+			<true/>
+		</dict>
+		<key>B7949597-EA38-48BF-A423-59B4484E598F</key>
+		<dict>
+			<key>ItemData</key>
+			<dict>
+				<key>BookmarkData</key>
+				<data>
+				Ym9va+QCAAAAAAQQMAAAACM/n1oAln2ze5TWBFxjOf5G
+				3sR+pCiKWndNYsHBhMRM4AEAAAQAAAADAwAAAAgAKAUA
+				AAABAQAAVXNlcnMAAAAFAAAAAQEAAHJwYWdlAAAABQAA
+				AAEBAABTaXRlcwAAABAAAAABAQAAc3BlY2llcy1jaXRl
+				LWNsYgcAAAABAQAAZG9pLnBocAAUAAAAAQYAABAAAAAg
+				AAAAMAAAAEAAAABYAAAACAAAAAQDAACEXAAAAAAAAAgA
+				AAAEAwAAlsYDAAAAAAAIAAAABAMAAEDoHgAAAAAACAAA
+				AAQDAAC0d3sBAAAAAAgAAAAEAwAA98K1BAAAAAAUAAAA
+				AQYAAIQAAACUAAAApAAAALQAAADEAAAACAAAAAAEAABB
+				xICd0+HB0xgAAAABAgAAAQAAAAAAAAAPAAAAAAAAAAAA
+				AAAAAAAACAAAAAQDAAADAAAAAAAAAAQAAAADAwAA9QEA
+				AAgAAAABCQAAZmlsZTovLy8MAAAAAQEAAE1hY2ludG9z
+				aCBIRAgAAAAEAwAAAJCClucAAAAIAAAAAAQAAEHEf2qi
+				gAAAJAAAAAEBAABFRURCQzQ5NS1ERjUyLTQ1NkEtQjQz
+				MS1GQjYwN0JGMDRBRDEYAAAAAQIAAIEAAAABAAAA7xMA
+				AAEAAAAAAAAAAAAAAAEAAAABAQAALwAAAAAAAAABBQAA
+				zAAAAP7///8BAAAAAAAAABAAAAAEEAAAaAAAAAAAAAAF
+				EAAA1AAAAAAAAAAQEAAAAAEAAAAAAABAEAAA8AAAAAAA
+				AAACIAAAzAEAAAAAAAAFIAAAPAEAAAAAAAAQIAAATAEA
+				AAAAAAARIAAAgAEAAAAAAAASIAAAYAEAAAAAAAATIAAA
+				cAEAAAAAAAAgIAAArAEAAAAAAAAwIAAA2AEAAAAAAAAB
+				wAAAIAEAAAAAAAARwAAAIAAAAAAAAAASwAAAMAEAAAAA
+				AAAQ0AAABAAAAAAAAAA=
+				</data>
+				<key>FileURL</key>
+				<string>file:///Users/rpage/Sites/species-cite-clb/doi.php</string>
+				<key>HasSecurityScope</key>
+				<true/>
+				<key>RelativePath</key>
+				<string>./doi.php</string>
+				<key>TypeID</key>
+				<string>_CFileLocator</string>
+				<key>Version</key>
+				<integer>1</integer>
+			</dict>
+			<key>ItemName</key>
+			<string>doi.php</string>
 			<key>ItemType</key>
 			<string>FileReference</string>
 			<key>UserOverrideItemName</key>

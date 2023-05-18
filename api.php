@@ -39,9 +39,9 @@ $datasets = array(
 	//2073,
 	129659, // Index Fungorum with Literature
 	164203, // IPNI with literature
-	127379, // AFD
+	//127379, // AFD
 	128415, // BioNames
-	223917, // ReptileDB with literature
+	//223917, // ReptileDB with literature
 	);	
 
 // name to search for
@@ -74,6 +74,8 @@ $url = 'https://api.checklistbank.org/nameusage/search';
 $url .= '?' . join('&', $parameters);
 
 $json = get($url);
+
+
 
 
 $response = json_decode($json);
@@ -124,8 +126,10 @@ if ($response && !$response->empty)
 					$hit->reference->citation = $reference_response->citation;
 				}
 				
-				
-				
+				if (isset($reference_response->title))
+				{
+					$hit->reference->title = $reference_response->title;
+				}				
 				
 				if ($ok)
 				{

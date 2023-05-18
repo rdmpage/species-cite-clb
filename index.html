@@ -3,6 +3,33 @@
 	<meta name="theme-color" content="#1a5d8d">
 	<title>Species Cite</title>
 	
+	<!--
+    <meta name="citation_journal_title" content="ZooKeys"/>
+    <meta name="citation_publisher" content="Pensoft Publishers"/>
+    <meta name="citation_title" content="Family-Group Names In Coleoptera (Insecta)"/>
+    <meta name="citation_volume" content="88"/>
+    <meta name="citation_issue" content=""/>
+    <meta name="citation_pdf_url" content="https://zookeys.pensoft.net/article/4001/download/pdf/"/>
+    <meta name="citation_firstpage" content="1"/>
+    <meta name="citation_lastpage" content="972"/>
+    <meta name="citation_doi" content="10.3897/zookeys.88.807"/>
+    <meta name="citation_issn" content="1313-2970"/>
+    <meta name="citation_date" content="04/04/2011 00:00:00"/>
+    -->
+    
+    
+    <meta id="citation_journal_title" name="citation_journal_title" content=""/>
+    <meta id="citation_title" name="citation_title" content=""/>
+    <meta id="citation_authors" name="citation_authors" content=""/>    
+    <meta id="citation_volume" name="citation_volume" content=""/>
+    <meta id="citation_issue" name="citation_issue" content=""/>
+    <meta id="citation_pdf_url" name="citation_pdf_url" content=""/>
+    <meta id="citation_firstpage" name="citation_firstpage" content=""/>
+    <meta id="citation_lastpage" name="citation_lastpage" content=""/>
+    <meta id="citation_doi" name="citation_doi" content=""/>
+    <meta id="citation_issn" name="citation_issn" content=""/>
+    <meta id="citation_date" name="citation_date" content=""/>
+  	
 	<style>
 		body {
 			font-family:Arial, sans-serif;
@@ -127,7 +154,7 @@
 								if (data.results[i].reference)
 								{
 									if (data.results[i].reference.citation) {
-										html += '<div id="citation" class="citation">' + data.results[i].reference.citation + '</div>';
+										html += '<div id="citation" class="citation">' + data.results[i].reference.citation + '</div>';																		
 									}
 									
 									html += '<table>';
@@ -181,6 +208,115 @@
 										}
 										);
 							}
+							
+							if (doi !== '') {
+								var url = 'doi.php?doi=' + encodeURIComponent(doi);
+			
+								fetch(url)
+									.then(
+										function(response){
+											if (response.status != 200) {
+												console.log('Looks like there was a problem. Status Code: ' + response.status);
+												return;
+											}
+				
+											response.json().then(function(data) {
+												// upaate
+												for (var i in data) {
+													switch (i) {
+														case 'container-title':
+															var title = data[i];
+															if (Array.isArray(title)) {
+																title = title[0];
+															}
+															document.getElementById('citation_journal_title').setAttribute('content', title);
+															break;
+																										
+														case 'title':
+															var title = data[i];
+															if (Array.isArray(title)) {
+																title = title[0];
+															}
+															document.getElementById('citation_title').setAttribute('content', title);
+															break;
+															
+														case 'DOI':
+															document.getElementById('citation_doi').setAttribute('content', data[i]);
+															break;
+
+														case 'volume':
+															document.getElementById('citation_volume').setAttribute('content', data[i]);
+															break;
+
+														case 'issue':
+															document.getElementById('citation_issue').setAttribute('content', data[i]);
+															break;
+
+														case 'page':
+															var m = data[i].match(/(.*)-(.*)/);
+															if (m) {
+																document.getElementById('citation_firstpage').setAttribute('content', m[1]);
+																document.getElementById('citation_lastpage').setAttribute('content', m[2]);															
+															} else {
+																document.getElementById('citation_firstpage').setAttribute('content', data[i]);
+															
+															}
+															break;
+			
+														case 'ISSN':
+															document.getElementById('citation_issn').setAttribute('content', data[i][0]);
+															break;
+			
+														case 'issued':
+															document.getElementById('citation_date').setAttribute('content', data[i]['date-parts'][0][0]);
+															break;
+
+														case 'author':
+															var authors = [];
+															for (var j in data[i]) {
+																var terms = [];
+																if (data[i][j].literal) {
+																	terms.push(data[i][j].literal);
+																} else {
+																	if (data[i][j].given) {
+																		terms.push(data[i][j].given);
+																	}
+																	if (data[i][j].family) {
+																		terms.push(data[i][j].family);
+																	}
+																}
+																authors.push(terms.join(' '));
+															}
+															document.getElementById('citation_authors').setAttribute('content', authors.join(';'));
+															break;
+			
+															
+														default:
+															break;
+													
+													}
+												
+												}
+												
+												// Zotero
+												// see https://www.zotero.org/support/dev/exposing_metadata
+												document.dispatchEvent(new Event('ZoteroItemUpdated', {
+													bubbles: true,
+													cancelable: true
+												}));
+												
+						
+											});
+										}
+										);
+							
+							
+							
+							}
+							
+							
+							
+
 								
 						
 						});
